@@ -1,0 +1,49 @@
+﻿@page
+@model Ryby_a_ulovky.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<!-- Kontejner přes celou šířku -->
+<div class="container-fluid mt-4">
+
+    <!-- Tři sloupce vedle sebe -->
+    <div class="d-flex justify-content-start align-items-start">
+
+        <!-- Obrázek vlevo -->
+        <div class="me-4">
+            <img src="@(Model.LoggedUser?.ProfileImagePath ?? "/images/candat.jpeg")"
+                 alt="Profilová fotka"
+                 class="rounded shadow"
+                 style="width: 350px; height: auto; object-fit: cover;" />
+        </div>
+
+        <!-- Velké okno aktuality uprostřed -->
+        <div class="me-4 p-4 border rounded shadow-sm bg-light"
+             style="flex-grow: 1; max-width: 700px;">
+
+            <h4 class="mb-3">Poslední aktualita</h4>
+
+            <p style="font-size: 1.2rem;">
+                @Model.PosledniAktualita?.Text
+            </p>
+
+            <small class="text-muted">
+                @Model.PosledniAktualita?.Datum.ToString("dd.MM.yyyy")
+            </small>
+        </div>
+
+        <!-- Tlačítka vpravo -->
+        <div class="d-flex flex-column gap-3" style="width: 250px;">
+
+            <a class="btn btn-primary btn-lg" asp-page="/Info/Index">Info Rybář</a>
+            <a class="btn btn-success btn-lg" asp-page="/Dochazka/Index">Docházka</a>
+            <a class="btn btn-warning btn-lg" asp-page="/Ulovky/Index">Úlovky</a>
+            <a class="btn btn-info btn-lg" asp-page="/Statistiky/Index">Statistiky</a>
+            <a class="btn btn-dark btn-lg" asp-page="/Aktuality/Index">Aktuality</a>
+            <a class="btn btn-secondary btn-lg" asp-page="/Nastaveni/Index">Nastavení</a>
+
+        </div>
+
+    </div>
+</div>

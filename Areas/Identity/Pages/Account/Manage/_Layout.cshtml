@@ -1,0 +1,28 @@
+﻿@using Ryby_a_ulovky.Models
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    var user = await UserManager.GetUserAsync(User);
+    if (user?.ProfileImagePath != null)
+    {
+        <img src="@user.ProfileImagePath" class="rounded-circle" width="40" height="40" />
+    }
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <partial name="_ManageNav" />
+    </div>
+    <div class="col-md-9">
+        @RenderBody()
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

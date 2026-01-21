@@ -1,0 +1,35 @@
+﻿@page
+@model Ryby_a_ulovky.Areas.Admin.Pages.Users.IndexModel
+@{
+    Layout = "/Areas/Admin/Pages/_AdminLayout.cshtml";
+}
+
+<h1>Uživatelé</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Potvrzený</th>
+            <th>Role</th>
+            <th>Akce</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@(user.EmailConfirmed ? "Ano" : "Ne")</td>
+                <td>
+                    @string.Join(", ", await Model.UserManager.GetRolesAsync(user))
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-primary" href="/Admin/Users/Details?id=@user.Id">Detail</a>
+                    <a class="btn btn-sm btn-warning" href="/Admin/Users/ResetPassword?id=@user.Id">Reset hesla</a>
+                    <a class="btn btn-sm btn-danger" href="/Admin/Users/Delete?id=@user.Id">Smazat</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

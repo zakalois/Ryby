@@ -1,0 +1,15 @@
+@using Ryby_a_ulovky.Models
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a class="nav-link" asp-page="./Index">Profil</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="./Email">Email</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="./ChangePassword">Zmìna hesla</a>
+    </li>
+</ul>
