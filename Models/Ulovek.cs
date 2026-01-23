@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ryby_a_ulovky.Models
+namespace Ryby.Models
 {
     public class Ulovek
     {

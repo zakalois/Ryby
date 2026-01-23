@@ -2,9 +2,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Ryby_a_ulovky.Models;
+using Ryby.Models;
+using System.Linq;
 
-namespace Ryby_a_ulovky.Areas.Admin.Pages.Dashboard
+namespace Ryby.Areas.Admin.Pages.Dashboard
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin")]

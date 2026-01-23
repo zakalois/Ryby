@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Ryby_a_ulovky.Models;
+using Ryby.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Ryby_a_ulovky.Areas.Identity.Pages.Account.Manage
+namespace Ryby.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {

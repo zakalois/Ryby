@@ -8279,9 +8279,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Visual Studio Projekt\\Ryby\\Ryby a ulovky.csproj",
-      "projectName": "Ryby a ulovky",
-      "projectPath": "C:\\Visual Studio Projekt\\Ryby\\Ryby a ulovky.csproj",
+      "projectUniqueName": "C:\\Visual Studio Projekt\\Ryby\\Ryby.csproj",
+      "projectName": "Ryby",
+      "projectPath": "C:\\Visual Studio Projekt\\Ryby\\Ryby.csproj",
       "packagesPath": "C:\\Users\\zaka\\.nuget\\packages\\",
       "outputPath": "C:\\Visual Studio Projekt\\Ryby\\obj\\",
       "projectStyle": "PackageReference",

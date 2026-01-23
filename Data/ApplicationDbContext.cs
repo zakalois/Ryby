@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Ryby_a_ulovky.Models;
+using Ryby.Models;
 
-namespace Ryby_a_ulovky.Data
+namespace Ryby.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

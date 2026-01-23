@@ -1,27 +1,40 @@
 ﻿@page
-@model GenerateRecoveryCodesModel
+@model Ryby.Areas.Identity.Pages.Account.Manage.GenerateRecoveryCodesModel
+
 @{
-    ViewData["Title"] = "Generate two-factor authentication (2FA) recovery codes";
+    ViewData["Title"] = "Generate recovery codes";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
-<partial name="_StatusMessage" for="StatusMessage" />
 <h3>@ViewData["Title"]</h3>
+
 <div class="alert alert-warning" role="alert">
     <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
         <strong>Put these codes in a safe place.</strong>
     </p>
     <p>
-        If you lose your device and don't have the recovery codes you will lose access to your account.
-    </p>
-    <p>
-        Generating new recovery codes does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
+        If you lose your device and do not have the recovery codes, you will lose access to your account.
     </p>
 </div>
-<div>
-    <form method="post">
-        <button class="btn btn-danger" type="submit">Generate Recovery Codes</button>
-    </form>
-</div>
+
+@if (Model.RecoveryCodes != null && Model.RecoveryCodes.Length > 0)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-group">
+                @foreach (var code in Model.RecoveryCodes)
+                {
+                    <li class="list-group-item">@code</li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+<form method="post">
+    <button class="btn btn-primary" type="submit">Generate new recovery codes</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

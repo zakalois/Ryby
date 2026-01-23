@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Ryby_a_ulovky.Data;
-using Ryby_a_ulovky.Models;
+using Ryby.Data;
+using Ryby.Models;
 
 // --------------------------------------
 // 1) Lokální funkce MUSÍ být úplně nahoře

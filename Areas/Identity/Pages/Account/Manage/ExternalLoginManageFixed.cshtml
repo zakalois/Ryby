@@ -1,0 +1,17 @@
+﻿@page
+@model Ryby.Areas.Identity.Pages.Account.Manage.ExternalLoginManageModel
+<h1>Externí přihlášení</h1>
+
+@if (Model.CurrentLogins != null && Model.CurrentLogins.Count > 0)
+{
+    <ul>
+        @foreach (var login in Model.CurrentLogins)
+        {
+            <li>@login.LoginProvider (@login.ProviderKey)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Žádné externí přihlášení nebylo nalezeno.</p>
+}

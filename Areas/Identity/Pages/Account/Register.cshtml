@@ -1,68 +1,84 @@
-﻿@page
-@model Ryby_a_ulovky.Areas.Identity.Pages.Account.RegisterModel
-@{
-    ViewData["Title"] = "Registrace";
-}
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-<h1>@ViewData["Title"]</h1>
+namespace Ryby.Areas.Identity.Pages.Account
+{
+    public class RegisterModel : PageModel
+    {
+        private readonly UserManager<IdentityUser>
+    _userManager;
+    private readonly SignInManager<IdentityUser>
+        _signInManager;
 
-<div class="row">
-    <div class="col-md-6">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Vytvoření nového účtu</h2>
-            <hr />
+        public RegisterModel(
+        UserManager<IdentityUser>
+            userManager,
+            SignInManager<IdentityUser>
+                signInManager)
+                {
+                _userManager = userManager;
+                _signInManager = signInManager;
+                }
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                [BindProperty]
+                public InputModel Input { get; set; }
 
-            <!-- Jméno -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FirstName" class="form-control" aria-required="true" />
-                <label asp-for="Input.FirstName"></label>
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-            </div>
+                public string ReturnUrl { get; set; }
 
-            <!-- Příjmení -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.LastName" class="form-control" aria-required="true" />
-                <label asp-for="Input.LastName"></label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
+                public class InputModel
+                {
+                [Required]
+                public string FirstName { get; set; }
 
-            <!-- Telefon -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Phone" class="form-control" aria-required="true" />
-                <label asp-for="Input.Phone"></label>
-                <span asp-validation-for="Input.Phone" class="text-danger"></span>
-            </div>
+                [Required]
+                public string LastName { get; set; }
 
-            <!-- Email -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
+                [Required]
+                public string Phone { get; set; }
 
-            <!-- Heslo -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.Password"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
+                [Required]
+                [EmailAddress]
+                public string Email { get; set; }
 
-            <!-- Potvrzení hesla -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.ConfirmPassword"></label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
+                [Required]
+                [DataType(DataType.Password)]
+                public string Password { get; set; }
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">
-                Registrovat
-            </button>
-        </form>
-    </div>
-</div>
+                [Required]
+                [DataType(DataType.Password)]
+                [Compare("Password")]
+                public string ConfirmPassword { get; set; }
+                }
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+                public void OnGet(string returnUrl = null)
+                {
+                ReturnUrl = returnUrl;
+                }
+
+                public async Task<IActionResult>
+                    OnPostAsync(string returnUrl = null)
+                    {
+                    returnUrl ??= Url.Content("~/");
+
+                    if (ModelState.IsValid)
+                    {
+                    var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+
+                    var result = await _userManager.CreateAsync(user, Input.Password);
+
+                    if (result.Succeeded)
+                    {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
+                    }
+
+                    foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    return Page();
+                    }
+                    }
+                    }

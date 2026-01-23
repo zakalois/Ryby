@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Ryby_a_ulovky.Migrations
+namespace Ryby.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

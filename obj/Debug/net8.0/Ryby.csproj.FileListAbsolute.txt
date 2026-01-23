@@ -1,0 +1,11 @@
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.csproj.AssemblyReference.cache
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.GeneratedMSBuildEditorConfig.editorconfig
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.AssemblyInfoInputs.cache
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.AssemblyInfo.cs
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.csproj.CoreCompileInputs.cache
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.MvcApplicationPartsAssemblyInfo.cs
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.MvcApplicationPartsAssemblyInfo.cache
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.RazorAssemblyInfo.cache
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.RazorAssemblyInfo.cs
+C:\Visual Studio Projekt\Ryby\obj\Debug\net8.0\Ryby.sourcelink.json

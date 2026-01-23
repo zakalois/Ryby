@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ryby_a_ulovky.Data;
-using Ryby_a_ulovky.Models;
+using Ryby.Data;
+using Ryby.Models;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace Ryby_a_ulovky.Pages
+namespace Ryby.Pages
 {
     public class IndexModel : PageModel
     {

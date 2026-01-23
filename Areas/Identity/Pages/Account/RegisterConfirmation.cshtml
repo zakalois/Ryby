@@ -1,23 +1,23 @@
-﻿@page
-@model RegisterConfirmationModel
-@{
-    ViewData["Title"] = "Register confirmation";
-}
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
+namespace Ryby.Areas.Identity.Pages.Account
+{
+    public class RegisterConfirmationModel : PageModel
     {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
-    }
-    else
-    {
-<p>
-        Please check your email to confirm your account.
-</p>
+        public string EmailConfirmationUrl { get; set; }
+        public bool DisplayConfirmAccountLink { get; set; }
+
+        public void OnGet(string email, string returnUrl = null)
+        {
+            // Pokud nemáš email sender, necháme potvrzovací link zobrazit
+            DisplayConfirmAccountLink = true;
+
+            // Tady by normálně byl generovaný link z UserManageru
+            EmailConfirmationUrl = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { userId = "demo", code = "demo", returnUrl },
+                protocol: Request.Scheme);
+        }
     }
 }
-

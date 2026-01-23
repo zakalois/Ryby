@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Ryby_a_ulovky.Data;
+using Ryby.Data;
 
 #nullable disable
 
-namespace Ryby_a_ulovky.Migrations
+namespace Ryby.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260119175919_Initial")]
@@ -158,7 +158,7 @@ namespace Ryby_a_ulovky.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Ryby_a_ulovky.Models.Aktualita", b =>
+            modelBuilder.Entity("Ryby.Models.Aktualita", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -178,7 +178,7 @@ namespace Ryby_a_ulovky.Migrations
                     b.ToTable("Aktuality");
                 });
 
-            modelBuilder.Entity("Ryby_a_ulovky.Models.ApplicationUser", b =>
+            modelBuilder.Entity("Ryby.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -246,7 +246,7 @@ namespace Ryby_a_ulovky.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Ryby_a_ulovky.Models.Lokalita", b =>
+            modelBuilder.Entity("Ryby.Models.Lokalita", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,7 +267,7 @@ namespace Ryby_a_ulovky.Migrations
                     b.ToTable("Lokality");
                 });
 
-            modelBuilder.Entity("Ryby_a_ulovky.Models.Ryba", b =>
+            modelBuilder.Entity("Ryby.Models.Ryba", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,7 +284,7 @@ namespace Ryby_a_ulovky.Migrations
                     b.ToTable("Ryby");
                 });
 
-            modelBuilder.Entity("Ryby_a_ulovky.Models.Ulovek", b =>
+            modelBuilder.Entity("Ryby.Models.Ulovek", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -331,7 +331,7 @@ namespace Ryby_a_ulovky.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Ryby_a_ulovky.Models.ApplicationUser", null)
+                    b.HasOne("Ryby.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -340,7 +340,7 @@ namespace Ryby_a_ulovky.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Ryby_a_ulovky.Models.ApplicationUser", null)
+                    b.HasOne("Ryby.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -355,7 +355,7 @@ namespace Ryby_a_ulovky.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Ryby_a_ulovky.Models.ApplicationUser", null)
+                    b.HasOne("Ryby.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -364,22 +364,22 @@ namespace Ryby_a_ulovky.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Ryby_a_ulovky.Models.ApplicationUser", null)
+                    b.HasOne("Ryby.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Ryby_a_ulovky.Models.Ulovek", b =>
+            modelBuilder.Entity("Ryby.Models.Ulovek", b =>
                 {
-                    b.HasOne("Ryby_a_ulovky.Models.Lokalita", "Lokalita")
+                    b.HasOne("Ryby.Models.Lokalita", "Lokalita")
                         .WithMany()
                         .HasForeignKey("LokalitaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Ryby_a_ulovky.Models.Ryba", "Ryba")
+                    b.HasOne("Ryby.Models.Ryba", "Ryba")
                         .WithMany()
                         .HasForeignKey("RybaId")
                         .OnDelete(DeleteBehavior.Cascade)

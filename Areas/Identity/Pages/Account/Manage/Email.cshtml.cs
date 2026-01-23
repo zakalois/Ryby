@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Ryby_a_ulovky.Models;
+using Ryby.Models;
 
-namespace Ryby_a_ulovky.Areas.Identity.Pages.Account.Manage
+namespace Ryby.Areas.Identity.Pages.Account.Manage
 {
     public class EmailModel : PageModel
     {

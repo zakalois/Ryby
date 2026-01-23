@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace Ryby_a_úlovky.Areas.Identity.Pages.Account.Manage
+namespace Ryby.Areas.Identity.Pages.Account.Manage
 {
     public class PersonalDataModel : PageModel
     {
