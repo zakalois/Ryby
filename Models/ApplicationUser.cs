@@ -13,10 +13,8 @@ namespace Ryby.Models
         [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
 
-        [Phone]
-        public string? Phone { get; set; }
+        // Telefon NEpřidáváme, IdentityUser už má PhoneNumber
 
-        // 🔥 Tohle budeme používat pro profilovou fotku
         public string? ProfileImagePath { get; set; }
     }
 }

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ryby.Data;
 using Ryby.Models;
+using Ryby.Services; // pokud máš EmailSender v Services
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 // --------------------------------------
 // 1) Lokální funkce MUSÍ být nahoře
@@ -55,14 +57,27 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Identity s ApplicationUser
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedAccount = true; // potvrzení e‑mailem
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Razor Pages
 builder.Services.AddRazorPages();
+builder.Services.Configure<MailSettings>(
+    builder.Configuration.GetSection("MailSettings"));
 
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+// -----------------------------
+// EmailSender konfigurace
+// -----------------------------
+builder.Services.Configure<MailSettings>(
+    builder.Configuration.GetSection("MailSettings"));
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+// Build
 var app = builder.Build();
 
 // Middleware
