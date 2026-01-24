@@ -5,7 +5,7 @@
     Layout = "/Areas/Identity/Pages/_Layout.cshtml";
 }
 
-@if (User.Identity.IsAuthenticated)
+@if (User?.Identity?.IsAuthenticated == true)
 {
     var user = await UserManager.GetUserAsync(User);
     if (user?.ProfileImagePath != null)

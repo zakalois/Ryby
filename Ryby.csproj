@@ -9,16 +9,7 @@
   <RazorCompileOnPublish>true</RazorCompileOnPublish>
 </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Ryby-a-ulovky\**" />
-    <Content Remove="Ryby-a-ulovky\**" />
-    <EmbeddedResource Remove="Ryby-a-ulovky\**" />
-    <None Remove="Ryby-a-ulovky\**" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\ManageNavPages.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
@@ -36,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <Folder Include="Shared\" />
     <Folder Include="wwwroot\images\users\" />
   </ItemGroup>
 

@@ -1,17 +1,16 @@
 ﻿@page
-@model Ryby.Areas.Identity.Pages.Account.Manage.HomePageModel
+<div style="background:green">TEST INDEX 4X</div>
+
+@model Ryby.Pages.IndexModel
 
 @{
     ViewData["Title"] = "Home page";
 }
 
-<!-- Kontejner přes celou šířku -->
 <div class="container-fluid mt-4">
 
-    <!-- Tři sloupce vedle sebe -->
     <div class="d-flex justify-content-start align-items-start">
 
-        <!-- Obrázek vlevo -->
         <div class="me-4">
             <img src="@(Model.LoggedUser?.ProfileImagePath ?? "/images/candat.jpeg")"
                  alt="Profilová fotka"
@@ -19,7 +18,6 @@
                  style="width: 350px; height: auto; object-fit: cover;" />
         </div>
 
-        <!-- Velké okno aktuality uprostřed -->
         <div class="me-4 p-4 border rounded shadow-sm bg-light"
              style="flex-grow: 1; max-width: 700px;">
 
@@ -34,7 +32,6 @@
             </small>
         </div>
 
-        <!-- Tlačítka vpravo -->
         <div class="d-flex flex-column gap-3" style="width: 250px;">
 
             <a class="btn btn-primary btn-lg" asp-page="/Info/Index">Info Rybář</a>

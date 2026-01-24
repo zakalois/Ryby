@@ -11,24 +11,35 @@ async Task SeedAdminAsync(IServiceProvider services)
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
+    // Vytvoření role Admin
     if (!await roleManager.RoleExistsAsync("Admin"))
         await roleManager.CreateAsync(new IdentityRole("Admin"));
 
     var adminEmail = "admin@ryby.cz";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
+    // Pokud admin neexistuje → vytvoříme ho
     if (adminUser == null)
     {
         adminUser = new ApplicationUser
         {
             UserName = adminEmail,
             Email = adminEmail,
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            FirstName = "Admin",
+            LastName = "User"
         };
 
-        await userManager.CreateAsync(adminUser, "Admin123!");
+        var result = await userManager.CreateAsync(adminUser, "Admin123!");
+
+        if (!result.Succeeded)
+        {
+            throw new Exception("Admin se nepodařilo vytvořit: " +
+                string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
     }
 
+    // Pokud není v roli → přidáme ho
     if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
         await userManager.AddToRoleAsync(adminUser, "Admin");
 }
@@ -39,13 +50,17 @@ async Task SeedAdminAsync(IServiceProvider services)
 
 var builder = WebApplication.CreateBuilder(args);
 
+// DB context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultUI()
-    .AddDefaultTokenProviders();
+// Identity
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+})
+.AddRoles<IdentityRole>() // DŮLEŽITÉ!
+.AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages();
 
@@ -53,8 +68,10 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
-app.UseAuthentication();
+
+app.UseAuthentication();   // MUSÍ být před Authorization
 app.UseAuthorization();
 
 app.MapRazorPages();

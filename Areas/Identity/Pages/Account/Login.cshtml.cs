@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using Ryby.Models;
 
 namespace Ryby.Areas.Identity.Pages.Account
@@ -62,6 +56,31 @@ namespace Ryby.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
+        }
+
+        public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(
+                    Input.Email!,
+                    Input.Password!,
+                    Input.RememberMe,
+                    lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in.");
+                    return LocalRedirect(returnUrl);
+                }
+
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return Page();
+            }
+
+            return Page();
         }
     }
 }
