@@ -16,6 +16,7 @@ namespace Ryby.Models
         [Phone]
         public string? Phone { get; set; }
 
+        // 🔥 Tohle budeme používat pro profilovou fotku
         public string? ProfileImagePath { get; set; }
     }
 }
