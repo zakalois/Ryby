@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Ryby.Models;
+using System.IO;
 
 namespace Ryby.Areas.Identity.Pages.Account
 {
@@ -24,17 +25,20 @@ namespace Ryby.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _env;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IWebHostEnvironment env)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _env = env;
         }
 
         [BindProperty]
@@ -74,17 +78,15 @@ namespace Ryby.Areas.Identity.Pages.Account
             [Display(Name = "Potvrzení hesla")]
             [Compare("Password", ErrorMessage = "Hesla se neshodují.")]
             public string ConfirmPassword { get; set; }
+
+            [Display(Name = "Profilová fotka")]
+            public IFormFile? ProfileImage { get; set; }
         }
 
         public async Task OnGetAsync(string? returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            Input = new InputModel
-            {
-                Email = "@"
-            };
         }
 
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
@@ -100,8 +102,34 @@ namespace Ryby.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
-                    Phone = Input.Phone
+                    PhoneNumber = Input.Phone
                 };
+
+                // Uložení profilové fotky
+                if (Input.ProfileImage != null)
+                {
+                    const long maxSize = 2 * 1024 * 1024; // 2 MB
+
+                    if (Input.ProfileImage.Length > maxSize)
+                    {
+                        ModelState.AddModelError(string.Empty, "Soubor je příliš velký. Maximální velikost je 2 MB.");
+                        return Page();
+                    }
+
+                    var folder = Path.Combine(_env.WebRootPath, "images/profile");
+                    Directory.CreateDirectory(folder);
+
+                    var extension = Path.GetExtension(Input.ProfileImage.FileName);
+                    var fileName = $"{Guid.NewGuid()}{extension}";
+                    var filePath = Path.Combine(folder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Input.ProfileImage.CopyToAsync(stream);
+                    }
+
+                    user.ProfileImagePath = fileName;
+                }
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
