@@ -1,2 +1,50 @@
-﻿Severity	Code	Description	Project	File	Line	Suppression State
-Error (active)	CS1061	'Areas_Identity_Pages_Account_Manage_Email' does not contain a definition for 'Email' and no accessible extension method 'Email' accepting a first argument of type 'Areas_Identity_Pages_Account_Manage_Email' could be found (are you missing a using directive or an assembly reference?)		C:\Visual Studio Projekt\Ryby\Areas\Identity\Pages\Account\Manage\Email.cshtml	16
+﻿@page
+@model Ryby.Areas.Identity.Pages.Account.Manage.EmailModel
+@{
+    ViewData["Title"] = "Email";
+}
+
+<h3>Manage your email</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form id="email-form" method="post" asp-page-handler="ChangeEmail">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input class="form-control" value="@Model.Email" disabled />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.NewEmail"></label>
+                <input asp-for="Input.NewEmail" class="form-control" />
+                <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Change email</button>
+
+            @if (Model.IsEmailConfirmed)
+            {
+                <span class="text-success ml-2">Email is confirmed</span>
+            }
+            else
+            {
+                <span class="text-warning ml-2">Email is not confirmed</span>
+            }
+        </form>
+
+        <hr />
+
+        <form id="send-verification-email-form" method="post" asp-page-handler="SendVerificationEmail">
+            <button type="submit" class="btn btn-secondary">Send verification email</button>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

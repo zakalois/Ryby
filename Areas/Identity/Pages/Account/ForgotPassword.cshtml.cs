@@ -1,20 +1,23 @@
-using System.ComponentModel.DataAnnotations;
+Ôªøusing System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Ryby.Models;   // ‚Üê D≈ÆLE≈ΩIT√â!
 
 namespace Ryby.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ForgotPasswordModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ForgotPasswordModel> _logger;
 
-        public ForgotPasswordModel(UserManager<IdentityUser> userManager, ILogger<ForgotPasswordModel> logger)
+        public ForgotPasswordModel(
+            UserManager<ApplicationUser> userManager,
+            ILogger<ForgotPasswordModel> logger)
         {
             _userManager = userManager;
             _logger = logger;
@@ -25,8 +28,8 @@ namespace Ryby.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required(ErrorMessage = "E-mail je povinn˝.")]
-            [EmailAddress(ErrorMessage = "Neplatn˝ form·t e-mailu.")]
+            [Required(ErrorMessage = "E-mail je povinn√Ω.")]
+            [EmailAddress(ErrorMessage = "Neplatn√Ω form√°t e-mailu.")]
             public string Email { get; set; }
         }
 
@@ -40,14 +43,14 @@ namespace Ryby.Areas.Identity.Pages.Account
                 return Page();
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
+
             if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
             {
-                // Neprozrazujeme, zda uûivatel existuje
+                // Neprozrazujeme, zda u≈æivatel existuje
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
 
-            // Zde by se generoval e-mail s odkazem na reset hesla
-            _logger.LogInformation("Reset hesla byl vyû·d·n pro e-mail: {Email}", Input.Email);
+            _logger.LogInformation("Reset hesla byl vy≈æ√°d√°n pro e-mail: {Email}", Input.Email);
 
             return RedirectToPage("./ForgotPasswordConfirmation");
         }

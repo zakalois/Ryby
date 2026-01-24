@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ryby.Data;
-using Ryby.Models;
+using Ryby.Models; // nebo Ryby.Areas.Identity.Data – podle toho, kde máš ApplicationUser
 
 // --------------------------------------
 // 1) Lokální funkce MUSÍ být úplně nahoře
@@ -11,14 +11,12 @@ async Task SeedAdminAsync(IServiceProvider services)
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-    // Vytvoření role Admin
     if (!await roleManager.RoleExistsAsync("Admin"))
         await roleManager.CreateAsync(new IdentityRole("Admin"));
 
     var adminEmail = "admin@ryby.cz";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
-    // Pokud admin neexistuje → vytvoříme ho
     if (adminUser == null)
     {
         adminUser = new ApplicationUser
@@ -39,7 +37,6 @@ async Task SeedAdminAsync(IServiceProvider services)
         }
     }
 
-    // Pokud není v roli → přidáme ho
     if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
         await userManager.AddToRoleAsync(adminUser, "Admin");
 }
@@ -50,16 +47,14 @@ async Task SeedAdminAsync(IServiceProvider services)
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DB context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
 })
-.AddRoles<IdentityRole>() // DŮLEŽITÉ!
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages();
@@ -71,19 +66,17 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();   // MUSÍ být před Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
 
-// Redirect /Admin → /Admin/Dashboard
 app.MapGet("/Admin", context =>
 {
     context.Response.Redirect("/Admin/Dashboard");
     return Task.CompletedTask;
 });
 
-// Seed admina
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
