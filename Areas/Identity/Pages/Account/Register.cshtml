@@ -9,6 +9,9 @@
 <form method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
 
+    <!-- Hidden input pro název dočasného souboru -->
+    <input type="hidden" asp-for="Input.TempImageName" />
+
     <div class="form-group">
         <label asp-for="Input.FirstName"></label>
         <input asp-for="Input.FirstName" class="form-control" />
@@ -47,9 +50,39 @@
 
     <div class="form-group">
         <label asp-for="Input.ProfileImage"></label>
-        <input asp-for="Input.ProfileImage" type="file" class="form-control" />
+
+        <input asp-for="Input.ProfileImage"
+               type="file"
+               accept="image/*"
+               id="profileImageInput"
+               class="form-control" />
+
         <span asp-validation-for="Input.ProfileImage" class="text-danger"></span>
+
+        <!-- Náhled obrázku -->
+        <img id="profileImagePreview"
+             src="@(Model?.Input?.TempImageName == null ? "" : "/Temp/" + Model.Input.TempImageName)"
+             alt="Náhled obrázku"
+             style="max-width: 200px; margin-top: 10px; @(Model?.Input?.TempImageName == null ? "display:none;" : "display:block;")" />
     </div>
 
     <button type="submit" class="btn btn-primary">Registrovat</button>
 </form>
+
+<script>
+    document.getElementById("profileImageInput").addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById("profileImagePreview");
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = "block";
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

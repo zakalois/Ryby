@@ -81,6 +81,9 @@ namespace Ryby.Areas.Identity.Pages.Account
 
             [Display(Name = "Profilová fotka")]
             public IFormFile? ProfileImage { get; set; }
+
+            // 🔥 Název dočasného souboru uloženého v /wwwroot/Temp
+            public string? TempImageName { get; set; }
         }
 
         public async Task OnGetAsync(string? returnUrl = null)
@@ -94,67 +97,90 @@ namespace Ryby.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
+            // 🔥 1) Pokud uživatel vybral fotku → uložíme ji do TEMP
+            if (Input.ProfileImage != null)
             {
-                var user = new ApplicationUser
+                const long maxSize = 2 * 1024 * 1024; // 2 MB limit
+
+                if (Input.ProfileImage.Length > maxSize)
                 {
-                    UserName = Input.Email,
-                    Email = Input.Email,
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
-                    PhoneNumber = Input.Phone
-                };
-
-                // Uložení profilové fotky
-                if (Input.ProfileImage != null)
-                {
-                    const long maxSize = 2 * 1024 * 1024; // 2 MB
-
-                    if (Input.ProfileImage.Length > maxSize)
-                    {
-                        ModelState.AddModelError(string.Empty, "Soubor je příliš velký. Maximální velikost je 2 MB.");
-                        return Page();
-                    }
-
-                    var folder = Path.Combine(_env.WebRootPath, "images/profile");
-                    Directory.CreateDirectory(folder);
-
-                    var extension = Path.GetExtension(Input.ProfileImage.FileName);
-                    var fileName = $"{Guid.NewGuid()}{extension}";
-                    var filePath = Path.Combine(folder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await Input.ProfileImage.CopyToAsync(stream);
-                    }
-
-                    user.ProfileImagePath = fileName;
+                    ModelState.AddModelError(string.Empty, "Soubor je příliš velký. Maximální velikost je 2 MB.");
+                    return Page();
                 }
 
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                // Cesta dočasné složky
+                var tempFolder = Path.Combine(_env.WebRootPath, "Temp");
+                Directory.CreateDirectory(tempFolder);
 
-                if (result.Succeeded)
+                var extension = Path.GetExtension(Input.ProfileImage.FileName);
+                var tempName = $"{Guid.NewGuid()}{extension}";
+                var tempPath = Path.Combine(tempFolder, tempName);
+
+                // Uložení souboru do TEMP
+                using (var stream = new FileStream(tempPath, FileMode.Create))
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Potvrzení emailu",
-                        $"Potvrďte prosím svůj účet kliknutím <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>zde</a>.");
-
-                    return LocalRedirect(returnUrl);
+                    await Input.ProfileImage.CopyToAsync(stream);
                 }
 
-                foreach (var error in result.Errors)
-                    ModelState.AddModelError(string.Empty, error.Description);
+                // Uložíme název temp souboru do modelu
+                Input.TempImageName = tempName;
             }
+
+            // 🔥 2) Pokud validace selže → vracíme stránku i s fotkou z TEMP
+            if (!ModelState.IsValid)
+                return Page();
+
+            // 🔥 3) Vytvoření uživatele
+            var user = new ApplicationUser
+            {
+                UserName = Input.Email,
+                Email = Input.Email,
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                PhoneNumber = Input.Phone
+            };
+
+            // 🔥 4) Pokud máme temp fotku → přesuneme ji do images/profile
+            if (!string.IsNullOrEmpty(Input.TempImageName))
+            {
+                var tempPath = Path.Combine(_env.WebRootPath, "Temp", Input.TempImageName);
+                var finalFolder = Path.Combine(_env.WebRootPath, "images/profile");
+                Directory.CreateDirectory(finalFolder);
+
+                var finalPath = Path.Combine(finalFolder, Input.TempImageName);
+
+                // Přesun souboru
+                System.IO.File.Move(tempPath, finalPath);
+
+                // Uložení názvu do DB
+                user.ProfilePicturePath = Input.TempImageName;
+            }
+
+            // 🔥 5) Vytvoření účtu
+            var result = await _userManager.CreateAsync(user, Input.Password);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User created a new account with password.");
+
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { area = "Identity", userId = user.Id, code = code },
+                    protocol: Request.Scheme);
+
+                await _emailSender.SendEmailAsync(Input.Email, "Potvrzení emailu",
+                    $"Potvrďte prosím svůj účet kliknutím <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>zde</a>.");
+
+                return LocalRedirect(returnUrl);
+            }
+
+            // 🔥 6) Pokud registrace selže → zobrazíme chyby
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
 
             return Page();
         }

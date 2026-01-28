@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ryby.Data;
 using Ryby.Models;
-using Ryby.Services; // pokud máš EmailSender v Services
+using Ryby.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 // --------------------------------------
@@ -13,7 +13,6 @@ async Task SeedAdminAsync(IServiceProvider services)
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-    // Role Admin
     if (!await roleManager.RoleExistsAsync("Admin"))
         await roleManager.CreateAsync(new IdentityRole("Admin"));
 
@@ -54,31 +53,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity s ApplicationUser
+// Identity
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true; // potvrzení e‑mailem
+    options.SignIn.RequireConfirmedAccount = true;
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// Razor Pages
+// Razor Pages (Identity)
 builder.Services.AddRazorPages();
+
+// MVC Views (TVÉ STRÁNKY)
+builder.Services.AddControllersWithViews();
+
+// Email
 builder.Services.Configure<MailSettings>(
     builder.Configuration.GetSection("MailSettings"));
-
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-// -----------------------------
-// EmailSender konfigurace
-// -----------------------------
-builder.Services.Configure<MailSettings>(
-    builder.Configuration.GetSection("MailSettings"));
-
-builder.Services.AddTransient<IEmailSender, EmailSender>();
-
-// Build
 var app = builder.Build();
+
+// ⭐⭐⭐ ZDE JE OPRAVA – ZOBRAZENÍ CHYB ⭐⭐⭐
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 // Middleware
 app.UseHttpsRedirection();
@@ -89,10 +89,15 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Razor Pages routing
+// MVC ROUTING
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Razor Pages (Identity)
 app.MapRazorPages();
 
-// Přesměrování /Admin → Admin Dashboard
+// Přesměrování /Admin
 app.MapGet("/Admin", context =>
 {
     context.Response.Redirect("/Admin/Dashboard");

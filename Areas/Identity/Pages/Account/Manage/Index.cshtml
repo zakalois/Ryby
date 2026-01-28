@@ -1,10 +1,13 @@
 ﻿@page
-
-@model IndexModel
+@model Ryby.Areas.Identity.Pages.Account.Manage.IndexModel
 @using Ryby.Areas.Identity.Pages.Account.Manage
 
 @{
-    ViewData["Title"] = "Profile";
+    Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Úprava profilu";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
@@ -12,29 +15,127 @@
 
 <partial name="_StatusMessage" for="StatusMessage" />
 
+<!-- HLAVNÍ ŘÁDEK – FORMULÁŘ -->
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+
+        @{
+            var imagePath = string.IsNullOrEmpty(Model.ProfilePicturePath)
+            ? "/images/profile/default.jpg"
+            : $"/images/profile/" + Model.ProfilePicturePath;
+        }
+
+        <!-- PROFILOVÁ FOTKA -->
+        <div class="mb-4 text-center">
+            <img id="profilePreview"
+                 src="@imagePath"
+                 alt="Profilová fotka"
+                 style="width:200px; height:200px; border-radius:50%; object-fit:cover;" />
+        </div>
+
+        <!-- FORMULÁŘ -->
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
+            <!-- Uživatelské jméno -->
             <div class="form-floating mb-3">
                 <input asp-for="Username" class="form-control" disabled />
-                <label asp-for="Username" class="form-label"></label>
+                <label asp-for="Username" class="form-label">Uživatelské jméno</label>
             </div>
 
+            <!-- Jméno -->
             <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                <input asp-for="Input.FirstName" class="form-control" />
+                <label asp-for="Input.FirstName">Jméno</label>
+            </div>
+
+            <!-- Příjmení -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.LastName" class="form-control" />
+                <label asp-for="Input.LastName">Příjmení</label>
+            </div>
+
+            <!-- Email -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" />
+                <label asp-for="Input.Email">Email</label>
+            </div>
+
+            <!-- Telefon -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" />
+                <label asp-for="Input.PhoneNumber">Telefon</label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
 
+            <!-- Rybářský lístek -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.FishingLicenseNumber" class="form-control" />
+                <label asp-for="Input.FishingLicenseNumber">Rybářský lístek číslo</label>
+            </div>
+
+            <!-- Povolenka pstruhová -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.TroutPermitNumber" class="form-control" />
+                <label asp-for="Input.TroutPermitNumber">Povolenka – Pstruhová</label>
+            </div>
+
+            <!-- Povolenka mimopstruhová -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.NonTroutPermitNumber" class="form-control" />
+                <label asp-for="Input.NonTroutPermitNumber">Povolenka – Mimopstruhová</label>
+            </div>
+
+            <!-- Změna profilové fotky -->
+            <div class="mb-3">
+                <label for="profileImage" class="form-label">Změnit profilovou fotku</label>
+                <input type="file" name="profileImage" id="profileImage" class="form-control" />
+            </div>
+
             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">
-                Save
+                Uložit změny
             </button>
         </form>
     </div>
 </div>
 
+<!-- DRUHÝ ŘÁDEK – NAVIGACE (ODDĚLENÁ OD FORMULÁŘE) -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <partial name="_ManageNav" />
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <!-- Náhled fotky -->
+    <script>
+        document.getElementById("profileImage").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("profilePreview").src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+
+    <!-- Kontrola velikosti fotky -->
+    <script>
+        document.getElementById("profileImage").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const maxSize = 2 * 1024 * 1024; // 2 MB
+
+            if (file.size > maxSize) {
+                alert("Soubor je příliš velký. Maximální velikost je 2 MB.");
+                event.target.value = "";
+                return;
+            }
+        });
+    </script>
 }

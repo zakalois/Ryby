@@ -5,16 +5,13 @@ namespace Ryby.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [Required]
-        [MaxLength(50)]
-        public string FirstName { get; set; } = string.Empty;
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string LastName { get; set; } = string.Empty;
+        public string? FishingLicenseNumber { get; set; } // Rybářský lístek
+        public string? TroutPermitNumber { get; set; }     // Povolenka pstruhová
+        public string? NonTroutPermitNumber { get; set; }  // Povolenka mimopstruhová
 
-        // Telefon NEpřidáváme, IdentityUser už má PhoneNumber
-
-        public string? ProfileImagePath { get; set; }
+        public string? ProfilePicturePath { get; set; }
     }
 }

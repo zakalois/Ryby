@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Ryby.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    var imagePath = string.IsNullOrEmpty(user?.ProfilePicturePath)
+        ? "/images/profile/default.jpg"
+        : $"/images/profile/" + user.ProfilePicturePath;
+
+    <div class="d-flex align-items-center gap-2">
+        <img src="@imagePath"
+             alt="Profilová fotka"
+             style="width:32px; height:32px; border-radius:50%; object-fit:cover;" />
+
+        <span>@user.FirstName @user.LastName</span>
+
+        <form method="post" asp-area="Identity" asp-page="/Account/Logout">
+            <button type="submit" class="btn btn-link">Odhlásit</button>
+        </form>
+    </div>
+}
+else
+{
+    <a asp-area="Identity" asp-page="/Account/Login">Přihlásit</a>
+}

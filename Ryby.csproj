@@ -11,6 +11,9 @@
 
   <ItemGroup>
     <Content Include="LICENCE" />
+    <Content Include="Zaloha\Index.1ignore" />
+    <Content Include="Zaloha\Index.ignore" />
+    <Content Include="Zaloha\Index2.ignore" />
   </ItemGroup>
 
 
@@ -19,6 +22,7 @@
     <PackageReference Include="MailKit" Version="4.14.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
       <PrivateAssets>all</PrivateAssets>
@@ -32,9 +36,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Identity\Pages\Shared\" />
     <Folder Include="Shared\" />
     <Folder Include="wwwroot\images\users\" />
+    <Folder Include="wwwroot\Temp\" />
   </ItemGroup>
+<ItemGroup>
+  <None Remove="Zaloha\**\*.cshtml" />
+  <None Remove="Zaloha\**\*.cshtml.cs" />
+</ItemGroup>
+<ItemGroup>
+  <Compile Include="Zaloha\Index.2ignore" />
+</ItemGroup>
 
 </Project>
