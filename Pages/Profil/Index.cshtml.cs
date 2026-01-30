@@ -22,10 +22,22 @@ namespace Ryby.Pages.Profil
 
         public async Task OnGetAsync()
         {
-            // 🔥 Tady je správně – PageModel.User je ClaimsPrincipal
-            CurrentUser = await _userManager.GetUserAsync(User);
+            try
+            {
+                Console.WriteLine("OnGetAsync START");
 
-            AktualitaText = "Vítej v systému Ryby. Zde uvidíš nejnovější informace a zprávy.";
+                CurrentUser = await _userManager.GetUserAsync(User);
+
+                Console.WriteLine("CurrentUser: " + (CurrentUser?.Email ?? "NULL"));
+
+                AktualitaText = "Vítej v systému Ryby. Zde uvidíš nejnovější informace a zprávy.";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("EXCEPTION in OnGetAsync: " + ex.Message);
+                throw;
+            }
         }
+
     }
 }

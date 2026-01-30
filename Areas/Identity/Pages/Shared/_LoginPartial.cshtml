@@ -5,7 +5,8 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    var user = await UserManager.GetUserAsync(User);
+    var user = UserManager.GetUserAsync(User).Result;
+
     var imagePath = string.IsNullOrEmpty(user?.ProfilePicturePath)
         ? "/images/profile/default.jpg"
         : $"/images/profile/" + user.ProfilePicturePath;
@@ -15,7 +16,7 @@
              alt="Profilová fotka"
              style="width:32px; height:32px; border-radius:50%; object-fit:cover;" />
 
-        <span>@user.FirstName @user.LastName</span>
+        <span>@user?.FirstName @user?.LastName</span>
 
         <form method="post" asp-area="Identity" asp-page="/Account/Logout">
             <button type="submit" class="btn btn-link">Odhlásit</button>

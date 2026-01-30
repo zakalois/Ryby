@@ -1,5 +1,0 @@
-﻿@page
-@model Ryby.Areas.Identity.Pages.Account.Manage.IndexModel
-
-@{
-}

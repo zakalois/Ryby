@@ -1,5 +1,4 @@
 ﻿@page
-
 @model Ryby.Pages.IndexModel
 
 @{
@@ -7,9 +6,9 @@
 }
 
 <div class="container-fluid mt-4">
-
     <div class="d-flex justify-content-start align-items-start">
 
+        <!-- Profilová fotka -->
         <div class="me-4">
             <img src="@(Model.LoggedUser?.ProfilePicturePath ?? "/images/candat.jpeg")"
                  alt="Profilová fotka"
@@ -17,9 +16,9 @@
                  style="width: 350px; height: auto; object-fit: cover;" />
         </div>
 
+        <!-- Poslední aktualita -->
         <div class="me-4 p-4 border rounded shadow-sm bg-light"
              style="flex-grow: 1; max-width: 700px;">
-
             <h4 class="mb-3">Poslední aktualita</h4>
 
             <p style="font-size: 1.2rem;">
@@ -31,6 +30,35 @@
             </small>
         </div>
 
+        <!-- Login panel – skrytý -->
         <div class="d-flex flex-column gap-3" style="width: 250px;">
+            <div id="login-panel" class="flex-column gap-3"
+                 style="width: 100%; display: none;">
 
-            <a class="btn btn-primary btn-lg" asp-page="/Info/Index">Info Rybář</a>
+                <h4>Přihlášení</h4>
+
+                <form method="post" asp-area="Identity" asp-page="/Account/Login">
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-floating mb-3">
+                        <input name="Input.Email" type="email" class="form-control" />
+                        <label>Email</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input name="Input.Password" type="password" class="form-control" />
+                        <label>Heslo</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Přihlásit</button>
+                </form>
+
+                <div class="text-center mt-2">
+                    <a asp-page="/Account/ForgotPassword">Zapomenuté heslo</a><br />
+                    <a asp-page="/Account/Register">Nová registrace</a><br />
+                    <a asp-page="/Account/ResendEmailConfirmation">Znovu poslat potvrzení</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

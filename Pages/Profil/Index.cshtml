@@ -11,15 +11,23 @@
         <!-- Levý sloupec: fotka + základní info -->
         <div class="col-md-3 mb-4">
             <div class="text-center">
-                <img src="@(Model.CurrentUser?.ProfilePicturePath != null
+                <img src="@(Model.CurrentUser != null && Model.CurrentUser.ProfilePicturePath != null
                          ? "/images/profile/" + Model.CurrentUser.ProfilePicturePath
                          : "/images/profile/default.jpg")"
                      alt="Profilová fotka"
                      class="img-fluid rounded-circle mb-3"
                      style="width:250px;height:250px;object-fit:cover;" />
 
-                <h5>@Model.CurrentUser?.FirstName @Model.CurrentUser?.LastName</h5>
-                <p class="text-muted mb-1">@Model.CurrentUser?.Email</p>
+                @if (Model.CurrentUser != null)
+                {
+                    <h5>@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</h5>
+                    <p class="text-muted mb-1">@Model.CurrentUser.Email</p>
+                }
+                else
+                {
+                    <h5>Neznámý uživatel</h5>
+                    <p class="text-muted mb-1">Email není dostupný</p>
+                }
             </div>
         </div>
 
