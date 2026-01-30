@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Ryby.Views
+namespace Ryby.Pages.Aktuality
 {
-    public class _ViewStartModel : PageModel
+    [Authorize]
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {
